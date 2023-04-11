@@ -1,7 +1,7 @@
 The first step is to type enter the working directory cloned from github
 Next type "createdb cab12"
 Next type "psql cab12"
-Once in the postgres terminal enter the table construction commands in the create_table_commands.sql
+Once in the postgres terminal enter the table construction commands in the create_table_commands2.sql
 Once that is done exit postgres and type "python initialize_database.py"
 This will populate the database with the values from the csv
 
