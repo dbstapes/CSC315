@@ -1,0 +1,41 @@
+<!-- /templates/my-form.html-->
+
+<html>
+    <head>
+        <title>NJ sustainable programs over time</title>
+    </head>
+    <body>
+	    <h3>NJ sustainable programs over time</h3>
+
+	    <h4>Insert what year and program data you would like to look at</h4>
+        <form>
+  <label for="year">Year:</label>
+  <select id="year" name="year">
+    <option value="2015">2015</option>
+    <option value="2020">2020</option>
+  </select>
+  <br>
+  <label for="data-type">Data Type:</label>
+  <select id="data-type" name="data-type">
+    <option value="solar-installation-data">Solar Installation Data</option>
+    <option value="green-data">Green Data</option>
+    <option value="oil-data">Oil Data</option>
+  </select>
+  <br>
+  <button type="submit">Submit</button>
+</form>
+
+	   
+    </body>
+
+    <!-- minimal styling -->
+    <style>
+        form {
+            margin: 1%;
+        }
+
+        div {
+            margin: 1% 0;
+        }
+    </style>
+</html>
