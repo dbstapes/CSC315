@@ -8,8 +8,47 @@
 	    <h3>NJ sustainable programs over time</h3>
 
 	    <h4>Insert what year and program data you would like to look at</h4>
-        <form>
-  <label for="year">Year:</label>
+<form action="/solar_programs_handler" method="POST">
+    <div>
+        Find all solar programs in municipality (search by municipality index)
+        <br>
+        *P.S. If you do not know your municipality's index, search for it using the municipality search below!
+        <br>
+        <input type="int" name="municipality_index">
+    </div>
+        <input type="submit" value="Submit">
+</form>
+<br>
+
+<form action="/ee_handler" method="POST">
+    <div>
+        Compare a municipality's ghg emissions to its number of completed energy efficiency programs
+        <br>
+    </div>
+        <input type="submit" value="Submit">
+
+</form>
+
+<br>
+
+<form action ="/municipality_handler" method="POST">
+    <div>
+        Find the municipality index of your municipality (search by municipality name)
+        <input type="varchar" name="municipality_name">
+    </div>
+        <input type="submit" value="Submit">
+</form>
+<br>
+<form action="/query-handler" method="POST">
+    <div>
+        Enter any PGSQL command, terminated with a semicolon
+        <br />
+            <input type="text" name="query">
+    </div>
+        <input type="submit" value="Submit">
+</form>
+
+  <!-- <label for="year">Year:</label>
   <select id="year" name="year">
     <option value="2015">2015</option>
     <option value="2020">2020</option>
@@ -23,7 +62,7 @@
   </select>
   <br>
   <button type="submit">Submit</button>
-</form>
+</form> -->
 
 	   
     </body>
