@@ -1,9 +1,48 @@
-The first step is to type enter the working directory cloned from github
-Next type "createdb cab12"
-Next type "psql cab12"
-Once in the postgres terminal enter the table construction commands in the create_table_commands2.sql
-Once that is done exit postgres and type "python initialize_database.py"
-This will populate the database with the values from the csv
+First the user must download the working directory or clone it from GitHub.
+Next, in the terminal, the user must enter the following command to create the database:
+```
+$> createdb cab12
+```
+Next, the user must navigate to the directory where they have stored the repository.
+
+From here, in order to populate the database and create all the tables, the user must run the CreateCAB12_db.sh file by entering the following command:
+```
+$> sh CreateCAB12_db.sh
+```
+Note that this may take a minute, so please be patient after running the command.
+
+Now that the database is populated, the user can access the web GUI by first running the command:
+```
+flask run
+```
+Now, while that server is up, enter the following link into your web browser's url search:
+
+http://127.0.0.1:5000
+
+Note that you can also access this link from the output in the terminal.
+
+This should bring you to a web page that looks like this:
+![image](https://user-images.githubusercontent.com/123781077/234079548-2ca43cbc-74b7-43ff-b039-7702e8618a10.png)
+
+Here, the user can make a variety of queries. For example, by entering a municipality's index number into the first field, you will receive the following result (here Ewing Township with the municipality index of 141 is being used):
+![image](https://user-images.githubusercontent.com/123781077/234080190-fed185b6-89eb-46b9-bdfa-3617c143f5ff.png)
+
+The user can also press the second "Submit" button to bring up a table that compares each municipality's greenhouse gas emissions to their number of completed energy efficiency programs:
+![image](https://user-images.githubusercontent.com/123781077/234080591-2bab8fa8-90d3-4651-a363-515821efae2f.png)
+
+Also if the user is curious about a particular municipality's index, they can search for that municipality in the next input field. In this example the input "princeton" is being searched:
+![image](https://user-images.githubusercontent.com/123781077/234080892-8aa28d5a-f20e-494f-97ce-6365dc22455c.png)
+
+Lastly, there is an input field where users who are familiar with SQL can enter any SQL commands they desire (in this example, the input is "SELECT * FROM municipality_code;"):
+![image](https://user-images.githubusercontent.com/123781077/234081454-7f646197-620f-4bec-99f8-4dc41f011655.png)
+
+
+P.S. Make sure to also run the following commands explained here to ensure Python, Flask, and Psycopg2 are installed:
+https://github.com/jdegood/flask7dbs/blob/main/README.md
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-8d59dc4de5201274e310e4c54b9627a8934c3b88527886e3b421487c677d23eb.svg)](https://classroom.github.com/a/-Nv0cKFk)
