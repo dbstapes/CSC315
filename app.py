@@ -57,6 +57,13 @@ def ee_handler():
     heads = ['Municipality Index', 'Municipality', 'County', 'Number of Completed EE Projects', 'GHG Emissions (MTCO2e)']
     return render_template('my-result.html', rows=rows, heads=heads)
 
+# handle second energy efficiency program POST and serve resultt web page
+@app.route('/ee2_handler', methods=['POST'])
+def ee2_handler():
+    rows = connect('SELECT mc.municipality_name, mc.county, e.num_ci_taxed_parcels, e.total_completed_projects, e.current_lifetime_rate, e.num_projects_needed FROM municipality_code mc, energy_efficiency_programs e WHERE mc.municipality_index=e.municipality_index;')
+    heads = ['Municipality', 'County', 'Number of CI Taxed Parcels', 'Total Number of Compeleted Projects', 'Current Lifetime Rate', 'Number of Projects Needed to get 5%']
+    return render_template('my-result.html', rows=rows, heads=heads)
+
 # handle municipality POST and serve result web page
 @app.route ('/municipality_handler', methods=['POST'])
 def municipality_handler():
