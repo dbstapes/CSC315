@@ -57,11 +57,25 @@ def ee_handler():
     heads = ['Municipality Index', 'Municipality', 'County', 'Number of Completed EE Projects', 'GHG Emissions (MTCO2e)']
     return render_template('my-result.html', rows=rows, heads=heads)
 
-# handle second energy efficiency program POST and serve resultt web page
+# handle second energy efficiency program POST and serve result web page
 @app.route('/ee2_handler', methods=['POST'])
 def ee2_handler():
     rows = connect('SELECT mc.municipality_name, mc.county, e.num_ci_taxed_parcels, e.total_completed_projects, e.current_lifetime_rate, e.num_projects_needed FROM municipality_code mc, energy_efficiency_programs e WHERE mc.municipality_index=e.municipality_index;')
     heads = ['Municipality', 'County', 'Number of CI Taxed Parcels', 'Total Number of Compeleted Projects', 'Current Lifetime Rate', 'Number of Projects Needed to get 5%']
+    return render_template('my-result.html', rows=rows, heads=heads)
+
+# handle commmunity profile data POST and serve result web page
+@app.route('/com_handler', methods=['POST'])
+def com_handler():
+    rows = connect('SELECT mc.municipality_name, mc.county, c.year, e.total_completed_projects, count(s.application_number), c.median_household_income, c.population FROM municipality_code mc, solar_installation_programs s, community_profile c, energy_efficiency_programs e WHERE c.year=2020 AND mc.municipality_index = ' + request.form['municipality_index'] + ' AND e.municipality_index = mc.municipality_index AND s.municipality_index = mc.municipality_index AND c.municipality_index=mc.municipality_index GROUP BY mc.municipality_index, mc.county, c.year, e.total_completed_projects, c.median_household_income, c.population ORDER BY c.year;')
+    heads = ['Municipality', 'County', 'Year', 'Completed Energy Efficiency Projects', '# of Solar Installations', 'Median Household Income', 'Population']
+    return render_template('my-result.html', rows=rows, heads=heads)
+
+# handle second commmunity profile data POST and serve result web page
+@app.route('/com_handler2', methods=['POST'])
+def com_handler2():
+    rows = connect('SELECT mc.municipality_name, mc.county, c.year, (m.residential_electricity + m.commercial_electricity + m.industrial_electricity + m.street_light_electricity), g.total_co2, c.median_household_income, c.population FROM municipality_code mc, mun_elec m, ghg_emissions g, community_profile c WHERE mc.municipality_index = ' + request.form['municipality_index'] + ' AND c.year=2020 AND m.municipality_index = mc.municipality_index AND m.year = c.year AND g.municipality_index = mc.municipality_index AND g.year=c.year AND c.municipality_index = mc.municipality_index;')
+    heads = ['Municipality', 'County', 'Year', 'Total Electricity Usage', 'Total CO2 Emissions', 'Median Household Income', 'Population']
     return render_template('my-result.html', rows=rows, heads=heads)
 
 # handle municipality POST and serve result web page

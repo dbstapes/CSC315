@@ -16,6 +16,7 @@ DROP TABLE energy_efficiency_programs;
 DROP TABLE solar_installation_programs CASCADE;
 DROP TABLE commercial_solar_customer;
 DROP TABLE ghg_emissions;
+DROP TABLE community_profile;
 
 CREATE TABLE municipality_code (
 PRIMARY KEY (Municipality_index), Municipality_index int,
@@ -79,6 +80,18 @@ Total_co2 int,
 PRIMARY KEY (Municipality_index, Year),
 FOREIGN KEY (Municipality_index) REFERENCES municipality_code(municipality_index)
 MATCH FULL );
+
+CREATE TABLE community_profile (
+Municipality_index int, 
+Year int,
+population int,
+median_household_income int,
+PRIMARY KEY(Municipality_index, Year), 
+FOREIGN KEY (municipality_index) REFERENCES municipality_code(municipality_index)
+MATCH FULL
+);
+
+
 ''')
 
 with open('Data/municipality_code.csv', 'r') as f:
@@ -129,10 +142,21 @@ with open('Data/EnergyEfficiency.csv', 'r') as f:
                 ''', (int(row[6]), int(row[2]), int(row[3]), float(row[7]),
                         row[5]))
 
-with open('Data/SolarInstallations4.csv', 'r') as f:
+with open('Data/Community_profile2.csv', 'r') as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
+                cursor.execute('''
+                INSERT INTO community_profile(Year, Municipality_index, population,
+                median_household_income) VALUES (%s, %s, %s, %s) 
+                ''', (int(row[3]), int(row[5]), int(row[6]),int(row[13])))
+
+with open('Data/SolarInstallations4.csv', 'r') as f:
+        reader = csv.reader(f)
+        next(reader)
+        j = 1
+        for row in reader:
+                print("Inserting Solar Installations: ",j,"/137,098")
                 cursor.execute('''
                 INSERT INTO solar_installation_programs (
                 Application_number, Program, PTO_date,
@@ -142,6 +166,7 @@ with open('Data/SolarInstallations4.csv', 'r') as f:
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ''', (row[0], row[1], row[7], float(row[8]), row[10], row[11],
                          row[12], row[13], row[14], int(row[16])))
+                j += 1
 
 with open('Data/Commercial_solar_customer_data.csv', 'r') as f:
         reader = csv.reader(f)
@@ -162,6 +187,8 @@ with open('Data/GHG Emissions Data2.csv', 'r') as f:
                 INSERT INTO ghg_emissions(Year, Total_co2, municipality_index)
                 VALUES (%s, %s, %s) 
                 ''', (row[3], row[14], row[15]))
+
+
 
 #cursor.execute(''' updateMunicipality.sql ''')
 cursor.execute('''
