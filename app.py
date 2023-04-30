@@ -74,7 +74,7 @@ def com_handler():
 # handle second commmunity profile data POST and serve result web page
 @app.route('/com_handler2', methods=['POST'])
 def com_handler2():
-    rows = connect('SELECT mc.municipality_name, mc.county, c.year, (m.residential_electricity + m.commercial_electricity + m.industrial_electricity + m.street_light_electricity), g.total_co2, c.median_household_income, c.population FROM municipality_code mc, mun_elec m, ghg_emissions g, community_profile c WHERE mc.municipality_index = ' + request.form['municipality_index'] + ' AND c.year=2020 AND m.municipality_index = mc.municipality_index AND m.year = c.year AND g.municipality_index = mc.municipality_index AND g.year=c.year AND c.municipality_index = mc.municipality_index;')
+    rows = connect('SELECT mc.municipality_name, mc.county, c.year, (m.residential_electricity + m.commercial_electricity + m.industrial_electricity + m.street_light_electricity), g.total_co2, c.median_household_income, c.population FROM municipality_code mc, municipality m, ghg_emissions g, community_profile c WHERE mc.municipality_index = ' + request.form['municipality_index'] + ' AND c.year=2020 AND m.municipality_index = mc.municipality_index AND m.year = c.year AND g.municipality_index = mc.municipality_index AND g.year=c.year AND c.municipality_index = mc.municipality_index;')
     heads = ['Municipality', 'County', 'Year', 'Total Electricity Usage', 'Total CO2 Emissions', 'Median Household Income', 'Population']
     return render_template('my-result.html', rows=rows, heads=heads)
 
