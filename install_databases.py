@@ -10,13 +10,13 @@ conn = psycopg2.connect(database='cab12',
 cursor = conn.cursor()
 
 cursor.execute('''
-DROP TABLE municipality_code CASCADE;
-DROP TABLE municipality;
-DROP TABLE energy_efficiency_programs;
-DROP TABLE solar_installation_programs CASCADE;
-DROP TABLE commercial_solar_customer;
-DROP TABLE ghg_emissions;
-DROP TABLE community_profile;
+DROP TABLE IF EXISTS municipality_code CASCADE;
+DROP TABLE IF EXISTS municipality;
+DROP TABLE IF EXISTS energy_efficiency_programs;
+DROP TABLE IF EXISTS solar_installation_programs CASCADE;
+DROP TABLE IF EXISTS commercial_solar_customer;
+DROP TABLE IF EXISTS ghg_emissions;
+DROP TABLE IF EXISTS community_profile;
 
 CREATE TABLE municipality_code (
 PRIMARY KEY (Municipality_index), Municipality_index int,
