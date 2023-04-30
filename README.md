@@ -1,7 +1,14 @@
+#CAB Project 12 Readme/Installation Guide
+
+## Purpose of Project
+The purpose of this project is to combine lots of data provided by Sustainable Jersey and combine it in interesting ways to view the effectiveness of various energy programs across the municipalities in New Jersey.
+
+## Installation and Usage
+
 First the user must download the working directory or clone it from GitHub.
-Next, in the terminal, the user must enter the following command to create the database:
+Next, in the terminal, the user must enter the following command to set up their VM with all the necessary software for the program to run:
 ```
-$> createdb cab12
+$> sh vm_setup.sh
 ```
 Next, the user must navigate to the directory where they have stored the repository.
 
@@ -29,6 +36,13 @@ Here, the user can make a variety of queries. For example, by entering a municip
 
 The user can also press the second "Submit" button to bring up a table that compares each municipality's greenhouse gas emissions to their number of completed energy efficiency programs:
 ![image](https://user-images.githubusercontent.com/123781077/234080591-2bab8fa8-90d3-4651-a363-515821efae2f.png)
+
+This program also allows the user to see a municipality's median household income and population and how it relates to the number of energy efficiency programs in the municipality. Here the user can enter the municipality index of their desired municipality to bring up the following:
+![image](https://user-images.githubusercontent.com/123781077/235371233-d17bcaba-5a61-4c8a-bcbf-31e33daba92e.png)
+
+There is also another feature where the user can see the median household income and population of a municipality in relation to the municipality's electricity usage, and greenhouse gas emissions as such:
+![image](https://user-images.githubusercontent.com/123781077/235371426-f9b6139a-0aa4-4929-a073-c694972bec68.png)
+
 
 Also if the user is curious about a particular municipality's index, they can search for that municipality in the next input field. In this example the input "princeton" is being searched:
 ![image](https://user-images.githubusercontent.com/123781077/234080892-8aa28d5a-f20e-494f-97ce-6365dc22455c.png)
