@@ -11,7 +11,7 @@ cursor = conn.cursor()
 
 cursor.execute('''
 DROP TABLE IF EXISTS municipality_code CASCADE;
-DROP TABLE IF EXISTS municipality;
+DROP TABLE IF EXISTS municipality CASCADE;
 DROP TABLE IF EXISTS energy_efficiency_programs;
 DROP TABLE IF EXISTS solar_installation_programs CASCADE;
 DROP TABLE IF EXISTS commercial_solar_customer;
@@ -24,10 +24,10 @@ Municipality_name varchar,
 County varchar);
 
 CREATE TABLE municipality (
-Residential_electricity int,
-Commercial_electricity int,
-Industrial_electricity int,
-Street_light_electricity int,
+Residential_electricity bigint,
+Commercial_electricity bigint,
+Industrial_electricity bigint,
+Street_light_electricity bigint,
 Residential_gas int,
 Commercial_gas int,
 Industrial_gas int,

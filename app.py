@@ -53,8 +53,8 @@ def solar_programs_handler():
 # handle energy efficiency program POST and serve result web page
 @app.route ('/ee_handler', methods=['POST'])
 def ee_handler():
-    rows = connect('SELECT mc.municipality_index, mc.municipality_name, mc.county, e.total_completed_projects, g.total_co2 FROM municipality_code mc, energy_efficiency_programs e, ghg_emissions g WHERE e.municipality_index = mc.municipality_index AND g.municipality_index = mc.municipality_index AND g.year =2020;')
-    heads = ['Municipality Index', 'Municipality', 'County', 'Number of Completed EE Projects', 'GHG Emissions (MTCO2e)']
+    rows = connect('SELECT mc.municipality_index, mc.municipality_name, mc.county, e.total_completed_projects, g.total_co2, c.population FROM municipality_code mc, energy_efficiency_programs e, ghg_emissions g, community_profile c WHERE e.municipality_index = mc.municipality_index AND g.municipality_index = mc.municipality_index AND c.municipality_index = mc.municipality_index AND c.year = 2020 AND g.year =2020 AND c.population > ' + request.form["pop_min"] + ' AND c.population < '+ request.form['pop_max'] + ' ORDER BY c.population;')
+    heads = ['Municipality Index', 'Municipality', 'County', 'Number of Completed EE Projects', 'GHG Emissions (MTCO2e)', 'Population (as of 2020)']
     return render_template('my-result.html', rows=rows, heads=heads)
 
 # handle second energy efficiency program POST and serve result web page
@@ -67,14 +67,14 @@ def ee2_handler():
 # handle commmunity profile data POST and serve result web page
 @app.route('/com_handler', methods=['POST'])
 def com_handler():
-    rows = connect('SELECT mc.municipality_name, mc.county, c.year, e.total_completed_projects, count(s.application_number), c.median_household_income, c.population FROM municipality_code mc, solar_installation_programs s, community_profile c, energy_efficiency_programs e WHERE c.year=2020 AND mc.municipality_index = ' + request.form['municipality_index'] + ' AND e.municipality_index = mc.municipality_index AND s.municipality_index = mc.municipality_index AND c.municipality_index=mc.municipality_index GROUP BY mc.municipality_index, mc.county, c.year, e.total_completed_projects, c.median_household_income, c.population ORDER BY c.year;')
-    heads = ['Municipality', 'County', 'Year', 'Completed Energy Efficiency Projects', '# of Solar Installations', 'Median Household Income', 'Population']
+    rows = connect('SELECT mc.municipality_index, mc.municipality_name, mc.county, c.year, e.total_completed_projects, count(s.application_number), c.median_household_income, c.population FROM municipality_code mc, solar_installation_programs s, community_profile c, energy_efficiency_programs e WHERE c.year=2020 AND e.municipality_index = mc.municipality_index AND s.municipality_index = mc.municipality_index AND c.municipality_index=mc.municipality_index GROUP BY mc.municipality_index, mc.county, c.year, e.total_completed_projects, c.median_household_income, c.population ORDER BY c.'+ request.form['attribute'] +';')
+    heads = ['Municipality Index','Municipality', 'County', 'Year', 'Completed Energy Efficiency Projects', '# of Solar Installations', 'Median Household Income', 'Population']
     return render_template('my-result.html', rows=rows, heads=heads)
 
 # handle second commmunity profile data POST and serve result web page
 @app.route('/com_handler2', methods=['POST'])
 def com_handler2():
-    rows = connect('SELECT mc.municipality_name, mc.county, c.year, (m.residential_electricity + m.commercial_electricity + m.industrial_electricity + m.street_light_electricity), g.total_co2, c.median_household_income, c.population FROM municipality_code mc, municipality m, ghg_emissions g, community_profile c WHERE mc.municipality_index = ' + request.form['municipality_index'] + ' AND c.year=2020 AND m.municipality_index = mc.municipality_index AND m.year = c.year AND g.municipality_index = mc.municipality_index AND g.year=c.year AND c.municipality_index = mc.municipality_index;')
+    rows = connect('CREATE VIEW mun_elec2 AS SELECT municipality_index, year, residential_electricity, commercial_electricity, industrial_electricity, street_light_electricity FROM municipality; UPDATE mun_elec2 SET residential_electricity=0 WHERE residential_electricity IS NULL; UPDATE mun_elec2 SET commercial_electricity=0 WHERE commercial_electricity IS NULL; UPDATE mun_elec2 SET industrial_electricity=0 WHERE industrial_electricity IS NULL; UPDATE mun_elec2 SET street_light_electricity=0 WHERE street_light_electricity IS NULL; SELECT mc.municipality_name, mc.county, c.year, (m.residential_electricity + m.commercial_electricity + m.industrial_electricity + m.street_light_electricity), g.total_co2, c.median_household_income, c.population FROM municipality_code mc, mun_elec2 m, ghg_emissions g, community_profile c WHERE c.year=2020 AND m.municipality_index = mc.municipality_index AND m.year = c.year AND g.municipality_index = mc.municipality_index AND g.year=c.year AND c.municipality_index = mc.municipality_index ORDER BY c.'+ request.form['attribute'] +';')
     heads = ['Municipality', 'County', 'Year', 'Total Electricity Usage', 'Total CO2 Emissions', 'Median Household Income', 'Population']
     return render_template('my-result.html', rows=rows, heads=heads)
 
