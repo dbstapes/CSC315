@@ -43,6 +43,8 @@ Also if the user is curious about a particular municipality's index, they can se
 Lastly, there is an input field where users who are familiar with SQL can enter any SQL commands they desire (in this example, the input is "SELECT * FROM municipality_code;"):
 ![image](https://user-images.githubusercontent.com/123781077/234081454-7f646197-620f-4bec-99f8-4dc41f011655.png)
 
+To shut off the server when you are done, go back into the terminal and press CTRL+C to shutdown the server.
+
 
 P.S. Make sure to also run the following commands explained here to ensure Python, Flask, and Psycopg2 are installed:
 https://github.com/jdegood/flask7dbs/blob/main/README.md
