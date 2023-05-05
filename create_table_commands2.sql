@@ -45,6 +45,14 @@ PRIMARY KEY (Application_number),
 FOREIGN KEY (Municipality_index) REFERENCES municipality_code (Municipality_index)
 MATCH FULL );
 
+CREATE TABLE ghg_emissions(
+Municipality_index int,
+Year int,
+Total_co2 int,
+PRIMARY KEY (Municipality_index, Year),
+FOREIGN KEY (Municipality_index) REFERENCES municipality_code(municipality_index)
+MATCH FULL );
+
 CREATE TABLE commercial_solar_customer (
 Application_number text,
 Premise_company text,

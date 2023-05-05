@@ -10,11 +10,13 @@ conn = psycopg2.connect(database='cab12',
 cursor = conn.cursor()
 
 cursor.execute('''
-DROP TABLE municipality_code CASCADE;
-DROP TABLE municipality;
-DROP TABLE energy_efficiency_programs;
-DROP TABLE solar_installation_programs CASCADE;
-DROP TABLE commercial_solar_customer;
+DROP TABLE IF EXISTS municipality_code CASCADE;
+DROP TABLE IF EXISTS municipality CASCADE;
+DROP TABLE IF EXISTS energy_efficiency_programs;
+DROP TABLE IF EXISTS solar_installation_programs CASCADE;
+DROP TABLE IF EXISTS commercial_solar_customer;
+DROP TABLE IF EXISTS ghg_emissions;
+DROP TABLE IF EXISTS community_profile;
 
 CREATE TABLE municipality_code (
 PRIMARY KEY (Municipality_index), Municipality_index int,
@@ -22,10 +24,10 @@ Municipality_name varchar,
 County varchar);
 
 CREATE TABLE municipality (
-Residential_electricity int,
-Commercial_electricity int,
-Industrial_electricity int,
-Street_light_electricity int,
+Residential_electricity bigint,
+Commercial_electricity bigint,
+Industrial_electricity bigint,
+Street_light_electricity bigint,
 Residential_gas int,
 Commercial_gas int,
 Industrial_gas int,
@@ -69,9 +71,30 @@ Premise_company text,
 premise_installation_address text,
 PRIMARY KEY (Application_number),
 FOREIGN KEY (Application_number) REFERENCES solar_installation_programs (Application_number)
-MATCH FULL );''')
+MATCH FULL );
 
-with open('Aggregate3.csv', 'r') as f:
+CREATE TABLE ghg_emissions(
+Municipality_index int,
+Year int,
+Total_co2 int,
+PRIMARY KEY (Municipality_index, Year),
+FOREIGN KEY (Municipality_index) REFERENCES municipality_code(municipality_index)
+MATCH FULL );
+
+CREATE TABLE community_profile (
+Municipality_index int, 
+Year int,
+population int,
+median_household_income int,
+PRIMARY KEY(Municipality_index, Year), 
+FOREIGN KEY (municipality_index) REFERENCES municipality_code(municipality_index)
+MATCH FULL
+);
+
+
+''')
+
+with open('Data/municipality_code.csv', 'r') as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
@@ -81,7 +104,7 @@ with open('Aggregate3.csv', 'r') as f:
                 VALUES (%s, %s, %s)
                 ''', (row[0], row[1], int(row[17])))
 
-with open('Aggregate5.csv', 'r') as f:
+with open('Data/municipality.csv', 'r') as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
@@ -104,7 +127,7 @@ with open('Aggregate5.csv', 'r') as f:
                         row[13], row[14], row[10], 
                         row[4], row[1], int(row[3]), int(row[16])))
 
-with open('EnergyEfficiency.csv', 'r') as f:
+with open('Data/EnergyEfficiency.csv', 'r') as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
@@ -119,10 +142,21 @@ with open('EnergyEfficiency.csv', 'r') as f:
                 ''', (int(row[6]), int(row[2]), int(row[3]), float(row[7]),
                         row[5]))
 
-with open('SolarInstallations.csv', 'r') as f:
+with open('Data/Community_profile2.csv', 'r') as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
+                cursor.execute('''
+                INSERT INTO community_profile(Year, Municipality_index, population,
+                median_household_income) VALUES (%s, %s, %s, %s) 
+                ''', (int(row[3]), int(row[5]), int(row[6]),int(row[13])))
+
+with open('Data/SolarInstallations4.csv', 'r') as f:
+        reader = csv.reader(f)
+        next(reader)
+        j = 1
+        for row in reader:
+                print("Inserting Solar Installations: ",j,"/137,098")
                 cursor.execute('''
                 INSERT INTO solar_installation_programs (
                 Application_number, Program, PTO_date,
@@ -131,9 +165,10 @@ with open('SolarInstallations.csv', 'r') as f:
                 Reg_status, Municipality_index) 
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ''', (row[0], row[1], row[7], float(row[8]), row[10], row[11],
-                         row[12], row[13], row[14], int(row[15])))
+                         row[12], row[13], row[14], int(row[16])))
+                j += 1
 
-with open('Commercial_solar_customer_data.csv', 'r') as f:
+with open('Data/Commercial_solar_customer_data.csv', 'r') as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
@@ -143,6 +178,17 @@ with open('Commercial_solar_customer_data.csv', 'r') as f:
                 premise_installation_address)
                 VALUES (%s, %s, %s)
                 ''', (row[0], row[2], row[3]))
+
+with open('Data/GHG Emissions Data2.csv', 'r') as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+                cursor.execute('''
+                INSERT INTO ghg_emissions(Year, Total_co2, municipality_index)
+                VALUES (%s, %s, %s) 
+                ''', (row[3], row[14], row[15]))
+
+
 
 #cursor.execute(''' updateMunicipality.sql ''')
 cursor.execute('''
