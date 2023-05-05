@@ -5,18 +5,11 @@ The purpose of this project is to combine lots of data provided by Sustainable J
 
 ## Installation and Usage
 
-First the user must download the working directory or clone it from GitHub.
-Next, in the terminal, the user must enter the following command to set up their VM with all the necessary software for the program to run:
-```
-$> sh vm_setup.sh
-```
-Next, the user must navigate to the directory where they have stored the repository.
-
-From here, in order to populate the database and create all the tables, the user must run the CreateCAB12_db.sh file by entering the following command:
+All the necessary set up and updates are contained in the .sh script below, so all the user must do is run the following command to set up everything necessary.
 ```
 $> sh CreateCAB12_db.sh
 ```
-Note that this may take a minute, so please be patient after running the command.
+Note that this may take a minute, so please be patient after running the command. You will also need your sudo password for some of the commands to run, and you will have to agree to installing certain updates as the system asks of you.
 
 Now that the database is populated, the user can access the web GUI by first running the command:
 ```
